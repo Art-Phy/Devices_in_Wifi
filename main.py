@@ -16,7 +16,7 @@ def escanear_red(red):
     result = srp(paquete, timeout=3, verbose=0)[0]
 
     dispositivos = []
-    for sent, received in result:
+    for _, received in result:
         ip = received.psrc
         mac = received.hwsrc
         nombre = obtener_nombre(ip)
