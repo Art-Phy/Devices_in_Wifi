@@ -1,9 +1,9 @@
-# Bienvenid@s a Tu Detector de usuarios de tu red Wifi.
+## Bienvenid@s a Tu Detector de usuarios de tu red Wifi.
 
 #### Es un progama simple para practicar Python, para principiantes con conocimientos en redes.
 
 #### El programa es capaz de reconocer los dispositivos conectados a tu red.
-#### Te muestra la dirección IP, MAC y nombre del dispositivo, si lo tiene.
+#### Te muestra la dirección IP, MAC y nombre del dispositivo (si lo tiene)
 #### Si lo corres desde tu editor de código, te saldrá un error porque es necesario correrlo con permisos  de superusuario.
 
 #### Hay que llamar a los siguientes módulos:
