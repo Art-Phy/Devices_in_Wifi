@@ -22,6 +22,7 @@
  - Documentación de GitHub [GitHub](https://docs.github.com/es)
  - Documentación Markdown [Markdown](https://markdown.es)
 
+-----------------------------
 ### ¿Qué pretendo con esto?
 
 #### Sencillamente nada, simplemente compartir mi día a día iniciándome en la programación, con Python en este caso. 
