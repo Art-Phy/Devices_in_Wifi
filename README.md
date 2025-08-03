@@ -2,7 +2,7 @@
 
 #### El programa es capaz de reconocer los dispositivos conectados a tu red.
 #### Te muestra la dirección IP, MAC y nombre del dispositivo (si lo tiene)
-#### Si lo corres desde tu editor de código, te saldrá un error porque es necesario correrlo con permisos  de superusuario.
+#### Si lo corres desde tu editor de código te saldrá un error porque es necesario correrlo con permisos de superusuario.
 
 #### Hay que llamar a los siguientes módulos:
     - from scapy.all import ARP, Ether, srp
