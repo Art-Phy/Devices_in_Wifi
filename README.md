@@ -6,8 +6,8 @@
 > ##### si no lo tienes instalado, necesitas instalar primero scapy:
 > ######  pip install scapy
 
-##### Te muestra la dirección IP, MAC y nombre del dispositivo (si lo tiene)
-##### Si lo corres desde tu editor de código te saldrá un error porque es necesario correrlo con permisos de superusuario.
+##### Muestra la dirección IP, MAC y nombre del dispositivo (si lo tiene)
+##### Es necesario correrlo como superusuario.
 
 >[!NOTE]
 >##### Hay que llamar a los siguientes módulos:
