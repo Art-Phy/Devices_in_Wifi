@@ -2,17 +2,15 @@
 
 ##### **El programa es capaz de reconocer los dispositivos conectados a tu red**
 
+##### Muestra la dirección IP, MAC y nombre del dispositivo (si lo tiene). Es necesario correrlo como superusuario.
+
+##### Hay que llamar a los siguientes módulos:
+ - from scapy.all import ARP, Ether, srp
+ - import socket
+
 >[!IMPORTANT]
 > ##### si no lo tienes instalado, necesitas instalar primero scapy:
 > ######  pip install scapy
-
-##### Muestra la dirección IP, MAC y nombre del dispositivo (si lo tiene)
-##### Es necesario correrlo como superusuario.
-
->[!NOTE]
->##### Hay que llamar a los siguientes módulos:
->######  from scapy.all import ARP, Ether, srp
->######  import socket
 
 #### Qué he usado
 
