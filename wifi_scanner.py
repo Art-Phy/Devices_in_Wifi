@@ -1,14 +1,16 @@
 """
-wifi_scanner.py
+=============================
+     DEVICES IN WIFI (v1.1.0)
+=============================
 
-Escaneador de dispositivos en una red Wi_Fi (basado en ARP) con resolución
-de nombre DNS inversa en paralelo usando ThreadPoolExecutor.
+Escaneador de dispositivos en una red Wi-Fi (basado en ARP) con resolución
+de nombres DNS inversa en paralelo usando ThreadPoolExecutor.
 
-Autor: Art-Phy
+Autor: Art-Phy (mejorado)
 IMPORTANTE:
-    - Requiere permisos de superusuario (sudo) para enviar/recibir paquetes raw.
-    - Usa scapy (pip install scapy) En MacOS/Ubunto puede requerir libcap
-    """
+  - Requiere permisos de superusuario (sudo) para enviar/recibir paquetes raw.
+  - Usa scapy (pip install scapy). En macOS/Ubuntu puede requerir libpcap.
+"""
 
 from __future__ import annotations
 import socket
@@ -20,19 +22,20 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 
 # scapy import
-from scapy.all import ARP, Ether, srp, conf # type: ignore
+from scapy.all import ARP, Ether, srp, conf  # type: ignore
+
 
 def obtener_nombre(ip: str, timeout: float = 1.0) -> str:
-    """ 
+    """
     Intenta obtener el nombre del host mediante DNS inversa.
-    Si falla o tarda demasiado, devuelve "Nombre desconocido"
-    
+    Si falla o tarda demasiado, devuelve "Nombre desconocido".
+
     Args:
-        ip: dirección IPv4 en forma string.
-        timetout: tiempo máximo (segundos) para la operación DNS inversa.
+        ip: dirección IPv4 en forma de string.
+        timeout: tiempo máximo (segundos) para la operación DNS inversa.
 
     Returns:
-        nombre (str) del host o "Nombre desconocido"
+        nombre (str) del host o "Nombre desconocido".
     """
     try:
         prev = socket.getdefaulttimeout()
@@ -42,28 +45,29 @@ def obtener_nombre(ip: str, timeout: float = 1.0) -> str:
         return nombre
     except (socket.herror, socket.gaierror, socket.timeout, OSError):
         return "Nombre desconocido"
-    
+
+
 def _resolver_nombres_paralelo(ips: List[str], timeout: float = 1.0, max_workers: int = 20) -> Dict[str, str]:
     """
     Resuelve una lista de IPs a nombres en paralelo.
-    
+
     Args:
         ips: lista de direcciones IP (strings).
         timeout: timeout por cada consulta gethostbyaddr.
         max_workers: número máximo de hilos simultáneos.
-    
+
     Returns:
         diccionario mapping ip -> nombre
     """
     resultados: Dict[str, str] = {}
     if not ips:
         return resultados
-    
+
     # Ajustar número de workers a la cantidad de ips y al límite pedido
     workers = min(max_workers, len(ips))
 
     with ThreadPoolExecutor(max_workers=workers) as executor:
-        # Lanza tareas
+        # lanzamos tareas
         future_to_ip = {executor.submit(obtener_nombre, ip, timeout): ip for ip in ips}
         for future in as_completed(future_to_ip):
             ip = future_to_ip[future]
@@ -76,23 +80,23 @@ def _resolver_nombres_paralelo(ips: List[str], timeout: float = 1.0, max_workers
     return resultados
 
 
-def escanear_red(red: str, timeout: float = 3.0, iface: Option[str] = None,
+def escanear_red(red: str, timeout: float = 3.0, iface: Optional[str] = None,
                  resolve_names: bool = True, name_timeout: float = 1.0,
                  max_workers: int = 20) -> List[Dict[str, str]]:
     """
     Escanea la red indicada (CIDR) y devuelve una lista de diccionarios con
-    'ip', 'mac', 'nombre'.
-    
+    'ip', 'mac' y 'nombre'.
+
     Args:
         red: red en formato CIDR (ej. "192.168.1.0/24").
         timeout: tiempo de espera para las respuestas ARP (segundos).
         iface: interfaz a usar (opcional).
-        resolve_names: si True, realiza resolución DNS inversa (paralela)
+        resolve_names: si True, realiza resolución DNS inversa (paralela).
         name_timeout: timeout individual para cada gethostbyaddr.
         max_workers: máximo de hilos para resolver nombres en paralelo.
 
     Returns:
-        listas de dicts: [{'ip': '192.168.1.2', 'mac': 'aa:bb:cc:dd:ee:ff', 'nombre': 'mi-dispositivo'}, ...]
+        lista de dicts: [{'ip': '192.168.1.2', 'mac': 'aa:bb:cc:dd:ee:ff', 'nombre': 'mi-dispositivo'}, ...]
     """
     if iface:
         conf.iface = iface
@@ -115,7 +119,7 @@ def escanear_red(red: str, timeout: float = 3.0, iface: Option[str] = None,
         for ip in ips:
             dispositivos.append({"ip": ip, "mac": ip_to_mac.get(ip, ""), "nombre": "Nombre desconocido"})
         return dispositivos
-    
+
     # Resolución paralela de nombres
     start = time.time()
     ip_to_name = _resolver_nombres_paralelo(ips, timeout=name_timeout, max_workers=max_workers)
@@ -129,7 +133,7 @@ def escanear_red(red: str, timeout: float = 3.0, iface: Option[str] = None,
             "nombre": ip_to_name.get(ip, "Nombre desconocido")
         })
 
-    # Información de rendimientos (opcional)
+    # Información de rendimiento (opcional)
     print(f"(Resolución de {len(ips)} nombres en {elapsed:.2f}s usando hasta {min(max_workers, len(ips))} hilos)")
 
     return dispositivos
@@ -137,17 +141,18 @@ def escanear_red(red: str, timeout: float = 3.0, iface: Option[str] = None,
 
 def imprimir_dispositivos(dispositivos: List[Dict[str, str]]) -> None:
     """
-    Muestra por pantalla los dispositivos encontrados encontrados en un formato legible.
+    Muestra por pantalla los dispositivos encontrados en un formato legible.
     """
     if not dispositivos:
         print("No se encontraron dispositivos.")
         return
-    
-    print("\nDispositivos encontrados: ")
+
+    print("\nDispositivos encontrados:")
     print(f"{'IP':15} {'MAC':20} {'NOMBRE'}")
     print("-" * 60)
     for d in dispositivos:
         print(f"{d['ip']:15} {d['mac']:20} {d['nombre']}")
+
 
 def guardar_csv(dispositivos: List[Dict[str, str]], ruta_salida: str) -> None:
     """
@@ -163,7 +168,7 @@ def guardar_csv(dispositivos: List[Dict[str, str]], ruta_salida: str) -> None:
     print(f"Resultados guardados en: {salida}")
 
 
-def parse_arg() -> argparse.Namespace:
+def parse_args() -> argparse.Namespace:
     """
     Analiza los argumentos de la línea de comandos.
     """
@@ -176,11 +181,11 @@ def parse_arg() -> argparse.Namespace:
     parser.add_argument("--name-timeout", type=float, default=1.0, help="Timeout para cada gethostbyaddr (default: %(default)s)")
     parser.add_argument("--max-workers", type=int, default=20, help="Máx. hilos para resolución de nombres (default: %(default)s)")
     return parser.parse_args()
-    
+
 
 def main() -> None:
-    args = parse_arg()
-    print(f"Escaneando red: {args.red}) (timeout={args.timeout}s)")
+    args = parse_args()
+    print(f"Escaneando red: {args.red}  (timeout={args.timeout}s)")
 
     dispositivos = escanear_red(
         args.red,

@@ -1,0 +1,5 @@
+# Dependencias necesarias para Devices_in_Wifi (v1.1.0)
+# En Mac o Linux puede requerirse libcap para Scapy
+
+scapy==2.5.1
+
