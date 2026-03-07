@@ -1,24 +1,41 @@
-## 📜 CHANGELOG
 
-### [v1.1.0] - 2025-11-03
+All notable changes to this project will be documented in this file.
 
-#### 🚀 Mejoras
-- Añadido escaneo de red con resolución **DNS inversa en paralelo** usando `ThreadPoolExecutor`.
-- Ahora el usuario puede especificar manualmente la red mediante el argumento `-r` (ej. `-r 10.0.0.0/24`).
-- Implementada opción `--no-name` para **omitir resolución de nombres** y acelerar el escaneo.
-- Soporte para guardar los resultados en un archivo CSV mediante el argumento `-s`.
-- Añadidos argumentos avanzados:
-  - `--max-workers` → controla el número de hilos usados en la resolución.
-  - `--name-timeout` → ajusta el tiempo máximo para cada búsqueda DNS inversa.
-- Mejorado el formato de salida en terminal (alineación de columnas y formato legible).
-- Documentación y comentarios en el código completamente revisados.
+The format is inspired by **Keep a Changelog** and the project follows **Semantic Versioning**.
 
-#### 🧰 Correcciones
-- Manejo robusto de excepciones en `gethostbyaddr` para evitar bloqueos.
-- Ajuste en el uso de `socket.setdefaulttimeout()` para restaurar correctamente el valor anterior.
-- Validación de rutas al guardar CSV.
+---
 
-#### 🧩 Otros cambios
-- Se añadió `argparse` para control completo desde terminal.
-- Se añadieron **type hints** y docstrings detallados para mejorar la legibilidad y mantenibilidad del código.
-- Limpieza general del código (PEP8 + nombres más descriptivos).
+### [Unreleased]
+
+#### Changed
+
+- Rewritten project **README** with portfolio-style documentation.
+- Improved repository presentation and documentation structure.
+
+---
+
+### [1.1.0] - 2025-11-03
+
+#### Added
+
+- Network scanning with **parallel reverse DNS resolution** using `ThreadPoolExecutor`.
+- Ability to manually specify the network range using `-r` (e.g. `-r 10.0.0.0/24`).
+- Option `--no-name` to **skip hostname resolution** and speed up scanning.
+- Option to export detected devices to **CSV** using `-s`.
+- Advanced CLI arguments:
+  - `--max-workers` → controls number of threads used for hostname resolution.
+  - `--name-timeout` → sets timeout for each reverse DNS lookup.
+- Improved terminal output formatting with aligned columns.
+- Added **argparse CLI interface**.
+- Added **type hints and detailed docstrings** to improve maintainability.
+
+#### Fixed
+
+- Robust exception handling in `socket.gethostbyaddr` to prevent blocking.
+- Correct restoration of `socket.setdefaulttimeout()` value.
+- Validation when saving CSV files.
+
+#### Changed
+
+- General code cleanup.
+- Improved naming and readability following **PEP8 conventions**.
