@@ -87,5 +87,20 @@ cd Devices_in_Wifi
 
 ---
 
+### 📁 Project Structure
+Devices_in_Wifi
+│
+├── main.py # CLI entrypoint del escáner
+├── README.md # Documentación del proyecto
+├── CHANGELOG.md # Historial de cambios y versiones
+├── requirements.txt # Dependencias del proyecto
+├── LICENSE
+└── .gitignore
+
+
+El proyecto está diseñado como una **herramienta CLI simple y autocontenida**, donde `main.py` contiene la lógica principal del escaneo de red, resolución de nombres y exportación de resultados.
+
+---
+
 > [!TIP]
 > ###### Si consideras útil el repositorio, apóyalo hanciendo "★ Star" 
