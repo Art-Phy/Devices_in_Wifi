@@ -5,4 +5,4 @@
 # pip install -r requirements.txt
 
 # Network packet manipulation and ARP scanning
-scapy==2.5.1
+scapy==2.7.0
