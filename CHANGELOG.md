@@ -5,16 +5,28 @@ The format is inspired by **Keep a Changelog** and the project follows **Semanti
 
 ---
 
-### [Unreleased]
+### [1.2.0] - 10.03.2025
 
 #### Changed
 
 - Rewritten project **README** with portfolio-style documentation.
-- Improved repository presentation and documentation structure.
+- Added **Project Structure** section to improve repository readability.
+- Added **Example Output** section showing CLI usage results.
+- Standardized **CHANGELOG** format following Keep a Changelog style.
+
+#### Fixed
+
+- Updated `scapy` dependency to a valid PyPI version.
+- Added UTF-8 encoding declaration to prevent non-ASCII errors.
+
+#### Maintenance
+
+- Improved `.gitignore` for Python projects.
+- Cleaned repository structure and documentation consistency.
 
 ---
 
-### [1.1.0] - 2025-11-03
+### [1.1.0] - 03.11.2025
 
 #### Added
 
