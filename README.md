@@ -43,7 +43,10 @@ El objetivo del proyecto es demostrar conocimientos de **programación en Python
 192.168.1.1 00:11:22:33:44:55 router
 192.168.1.10 AA:BB:CC:DD:EE:FF laptop
 192.168.1.15 12:34:56:78:90:AB smart-tv
+192.168.1.20 7C:D1:C3:91:44:F2 Nombre desconocido
 ```
+El tiempo de resolución de nombres depende del número de dispositivos encontrados
+y de los parámetros `--max-workers` y `--name-timeout`.
 
 
 ---
@@ -88,14 +91,14 @@ cd Devices_in_Wifi
 ---
 
 ### 📁 Project Structure
-Devices_in_Wifi
+- Devices_in_Wifi
 │
-├── main.py # CLI entrypoint del escáner
-├── README.md # Documentación del proyecto
-├── CHANGELOG.md # Historial de cambios y versiones
-├── requirements.txt # Dependencias del proyecto
-├── LICENSE
-└── .gitignore
+├── - main.py # CLI entrypoint del escáner
+├── - README.md # Documentación del proyecto
+├── - CHANGELOG.md # Historial de cambios y versiones
+├── - requirements.txt # Dependencias del proyecto
+├── - LICENSE
+└── - .gitignore
 
 
 El proyecto está diseñado como una **herramienta CLI simple y autocontenida**, donde `main.py` contiene la lógica principal del escaneo de red, resolución de nombres y exportación de resultados.
