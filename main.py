@@ -209,14 +209,21 @@ def main() -> None:
 
     print(f"Escaneando red: {args.red}  (timeout={args.timeout}s)")
 
-    dispositivos = escanear_red(
-        args.red,
-        timeout=args.timeout,
-        iface=args.iface,
-        resolve_names=not args.no_name,
-        name_timeout=args.name_timeout,
-        max_workers=args.max_workers
-    )
+    try:
+        dispositivos = escanear_red(
+            args.red,
+            timeout=args.timeout,
+            iface=args.iface,
+            resolve_names=not args.no_name,
+            name_timeout=args.name_timeout,
+            max_workers=args.max_workers
+        )
+    except PermissionError:
+        print("Error: se requieren permisos de superusuario para escanear la red")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error inesperado durante el escaneo: {e}")
+        sys.exit(1)
 
     imprimir_dispositivos(dispositivos)
 
