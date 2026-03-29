@@ -15,6 +15,8 @@ IMPORTANTE:
 """
 
 from __future__ import annotations
+import ipaddress
+import sys
 import socket
 import csv
 import argparse
@@ -187,6 +189,24 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    try:
+        ipaddress.ip_network(args.red, strict=False)
+    except ValueError:
+        print(f"Error: la red '{args.red}' no es un CIDR válido (ej: 192.168.1.0/24)")
+        sys.exit(1)
+
+    if args.timeout <= 0:
+        print("Error: --timeout debe ser mayor que 0")
+        sys.exit(1)
+
+    if args.name_timeout <= 0:
+        print("Error: --name-timeout debe ser mayor que 0")
+        sys.exit(1)
+
+    if args.max_workers <= 0:
+        print("Error: --max-workers debe ser mayor que 0")
+        sys.exit(1)
+
     print(f"Escaneando red: {args.red}  (timeout={args.timeout}s)")
 
     dispositivos = escanear_red(
