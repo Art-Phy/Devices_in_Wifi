@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import List, Dict, Optional
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
+import ipaddress
 
 # scapy import
 from scapy.all import ARP, Ether, srp, conf  # type: ignore
@@ -82,6 +83,27 @@ def _resolver_nombres_paralelo(ips: List[str], timeout: float = 1.0, max_workers
             resultados[ip] = nombre
 
     return resultados
+
+
+
+def detectar_red_locar() -> str:
+    """
+    Intenta detectar la red local del equipo y devuelve un CIDR /24.
+    Ejemplo: '192.168.1.0/24'
+
+    Returns:
+        Red local en formato CIDR    
+    """
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.connect(("8.8.8.8", 80))
+            ip_local = s.getsockname()[0]
+
+        red = ipaddress.ip_network(f"{ip_local}/24", strict=False)
+        return str(red)
+    except OSError:
+        return "192.168.1.0/24"
+
 
 
 def escanear_red(red: str, timeout: float = 3.0, iface: Optional[str] = None,
@@ -177,7 +199,7 @@ def parse_args() -> argparse.Namespace:
     Analiza los argumentos de la línea de comandos.
     """
     parser = argparse.ArgumentParser(description="Escaneador de dispositivos en red Wi-Fi (ARP scan)")
-    parser.add_argument("-r", "--red", default="192.168.1.0/24", help="Red/CIDR a escanear (default: %(default)s)")
+    parser.add_argument("-r", "--red", default=None, help="Red/CIDR a escanear (ej: 192.168.1.0/24)")
     parser.add_argument("-t", "--timeout", type=float, default=3.0, help="Timeout ARP en segundos (default: %(default)s)")
     parser.add_argument("-i", "--iface", default=None, help="Interfaz a usar (opcional)")
     parser.add_argument("-s", "--save", default=None, help="Ruta CSV donde guardar resultados (opcional)")
@@ -189,6 +211,9 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    if args.red is None:
+        args.red = detectar_red_locar()
+        
     try:
         ipaddress.ip_network(args.red, strict=False)
     except ValueError:
