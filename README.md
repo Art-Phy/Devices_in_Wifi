@@ -10,7 +10,7 @@
 
 Herramienta **CLI desarrollada en Python** que permite escanear una red local y detectar los dispositivos conectados a ella, mostrando información como dirección **IP**, **MAC** y nombre de host opcional.
 
-El objetivo del proyecto es demostrar conocimientos de **programación en Python aplicada a redes**, desarrollo de **herramientas de línea de comandos**, procesamiento concurrente y buenas prácticas de desarrollo y control de versiones.
+El proyecto está enfocado en demostrar habilidades en **programación de red con Python**, desarrollo de herramientas CLI, procesamiento concurrente y buenas prácticas de desarrollo.
 
 ---
 
@@ -25,18 +25,32 @@ El objetivo del proyecto es demostrar conocimientos de **programación en Python
 
 #### CLI Features
 
+- Detección automática de la red local si no se especifica `-r`.
 - Selección manual del rango de red.
 - Selección de interfaz de red.
 - Control del número de workers concurrentes.
 - Desactivación opcional de resolución de nombres.
 - Timeout configurable para resolución DNS.
+- Validación de argumentos de entrada.
 
 #### Export
 
 - Exportación de resultados a **CSV**.
+- Exportación de resultados a **JSON**.
 - Salida clara y legible en consola.
 
 ---
+
+#### Opciones CLI
+```
+`-r`, `--red`    -> Red/CIDR a escanear
+`-i`, `--iface`  -> Interfaz de red
+`-s`, `--save`   -> Guardar resultados en CSV
+`--json`         -> Guardar resultados en JSON
+`--no-name`      -> No resolver nombres de host
+`--max-workers`  -> Número de workers concurrentes
+`--name-timeout` -> Timeout para resolución DNS
+```
 
 #### 📊 Ejemplo de salida
 ```bash
@@ -58,7 +72,7 @@ y de los parámetros `--max-workers` y `--name-timeout`.
 - **CLI:** argparse
 - **Resolución DNS:** socket
 - **Concurrencia:** concurrent.futures
-- **Exportación:** CSV
+- **Exportación:** CSV/JSON
 - **Testing:** pytest
 - **Control de versiones:** Git + GitFlow
 
@@ -72,18 +86,19 @@ cd Devices_in_Wifi
 ```
 
 #### 🧠 Decisiones técnicas destacables
-- Uso de Scapy para realizar escaneos ARP en la red local.
+- Uso de Scapy para escaneos ARP a bajo nivel. 
 - Resolución de nombres mediante reverse **DNS lookup**.
-- Uso de concurrencia con ThreadPoolExecutor para acelerar la resolución de hostnames.
-- Interfaz CLI flexible mediante argparse.
+- Uso de **ThreadPoolExecutor** para paralelizar consultas DNS.
+- Validación de entrada con **ipaddress**
+- Manejo de errores para mejorar la experiencia CLI.
+- Diseño simple y autocontenido orientado a herramientas reales.
 - Arquitectura modular preparada para futuras mejoras.
 - Versionado semántico con releases claras.
-- Flujo GitFlow aplicado estrictamente (`main`, `develop`, `feature/*`).
+- Flujo GitFlow (`main`, `develop`, `feature/*`).
 
 #### 🔭 Posibles extensiones futuras (no implementadas)
 - Detección de fabricante mediante OUI lookup.
 - Identificación de tipo de dispositivo.
-- Exportación adicional a JSON.
 - Interfaz web ligera para visualizar dispositivos detectados.
 - Monitorización continua de la red.
 - Alertas cuando aparece un nuevo dispositivo.
@@ -91,6 +106,7 @@ cd Devices_in_Wifi
 ---
 
 ### 📁 Project Structure
+```
 - Devices_in_Wifi
 │
 ├── - main.py # CLI entrypoint del escáner
@@ -99,7 +115,7 @@ cd Devices_in_Wifi
 ├── - requirements.txt # Dependencias del proyecto
 ├── - LICENSE
 └── - .gitignore
-
+```
 
 El proyecto está diseñado como una **herramienta CLI simple y autocontenida**, donde `main.py` contiene la lógica principal del escaneo de red, resolución de nombres y exportación de resultados.
 
