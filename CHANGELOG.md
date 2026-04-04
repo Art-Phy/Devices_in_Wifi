@@ -5,6 +5,24 @@ The format is inspired by **Keep a Changelog** and the project follows **Semanti
 
 ---
 
+### [1.3.0] - 04.04.2026
+
+#### Added
+
+- Automatic local network detection when no custom CIDR range is provided.
+- JSON export support through a dedicated CLI argument.
+
+#### Changed
+
+- Improved CLI argument validation for network range and numeric parameters.
+- Improved error handling during scan execution with clearer user-facing messages.
+
+#### Fixed
+
+- More robust execution flow for invalid input values and scan-time failures.
+
+---
+
 ### [1.2.0] - 10.03.2025
 
 #### Changed

@@ -15,6 +15,8 @@ IMPORTANTE:
 """
 
 from __future__ import annotations
+import ipaddress
+import sys
 import socket
 import csv
 import argparse
@@ -22,6 +24,8 @@ from pathlib import Path
 from typing import List, Dict, Optional
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
+import ipaddress
+import json
 
 # scapy import
 from scapy.all import ARP, Ether, srp, conf  # type: ignore
@@ -80,6 +84,27 @@ def _resolver_nombres_paralelo(ips: List[str], timeout: float = 1.0, max_workers
             resultados[ip] = nombre
 
     return resultados
+
+
+
+def detectar_red_locar() -> str:
+    """
+    Intenta detectar la red local del equipo y devuelve un CIDR /24.
+    Ejemplo: '192.168.1.0/24'
+
+    Returns:
+        Red local en formato CIDR    
+    """
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.connect(("8.8.8.8", 80))
+            ip_local = s.getsockname()[0]
+
+        red = ipaddress.ip_network(f"{ip_local}/24", strict=False)
+        return str(red)
+    except OSError:
+        return "192.168.1.0/24"
+
 
 
 def escanear_red(red: str, timeout: float = 3.0, iface: Optional[str] = None,
@@ -156,6 +181,7 @@ def imprimir_dispositivos(dispositivos: List[Dict[str, str]]) -> None:
         print(f"{d['ip']:15} {d['mac']:20} {d['nombre']}")
 
 
+
 def guardar_csv(dispositivos: List[Dict[str, str]], ruta_salida: str) -> None:
     """
     Guarda la lista de dispositivos en un archivo CSV (encabezados: ip, mac, nombre).
@@ -170,15 +196,29 @@ def guardar_csv(dispositivos: List[Dict[str, str]], ruta_salida: str) -> None:
     print(f"Resultados guardados en: {salida}")
 
 
+def guardar_json(dispositivos: List[Dict[str, str]], ruta_salida: str) -> None:
+    """
+    Guardar la lista de dispositivos en un archivo JSON.
+    """
+    salida = Path(ruta_salida)
+    salida.parent.mkdir(parents=True, exist_ok=True)
+
+    with salida.open("w", encoding="utf-8") as f:
+        json.dump(dispositivos, f, indent=2, ensure_ascii=False)
+
+    print(f"Resultados guardados en JSON: {salida}")
+
+
 def parse_args() -> argparse.Namespace:
     """
     Analiza los argumentos de la línea de comandos.
     """
     parser = argparse.ArgumentParser(description="Escaneador de dispositivos en red Wi-Fi (ARP scan)")
-    parser.add_argument("-r", "--red", default="192.168.1.0/24", help="Red/CIDR a escanear (default: %(default)s)")
+    parser.add_argument("-r", "--red", default=None, help="Red/CIDR a escanear (ej: 192.168.1.0/24)")
     parser.add_argument("-t", "--timeout", type=float, default=3.0, help="Timeout ARP en segundos (default: %(default)s)")
     parser.add_argument("-i", "--iface", default=None, help="Interfaz a usar (opcional)")
     parser.add_argument("-s", "--save", default=None, help="Ruta CSV donde guardar resultados (opcional)")
+    parser.add_argument("--json", dest="json_output", default=None, help="Ruta JSON donde guardar resultados (opcional)")
     parser.add_argument("--no-name", dest="no_name", action="store_true", help="No intentar resolver nombres por DNS inversa (más rápido)")
     parser.add_argument("--name-timeout", type=float, default=1.0, help="Timeout para cada gethostbyaddr (default: %(default)s)")
     parser.add_argument("--max-workers", type=int, default=20, help="Máx. hilos para resolución de nombres (default: %(default)s)")
@@ -187,21 +227,52 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    if args.red is None:
+        args.red = detectar_red_locar()
+        
+    try:
+        ipaddress.ip_network(args.red, strict=False)
+    except ValueError:
+        print(f"Error: la red '{args.red}' no es un CIDR válido (ej: 192.168.1.0/24)")
+        sys.exit(1)
+
+    if args.timeout <= 0:
+        print("Error: --timeout debe ser mayor que 0")
+        sys.exit(1)
+
+    if args.name_timeout <= 0:
+        print("Error: --name-timeout debe ser mayor que 0")
+        sys.exit(1)
+
+    if args.max_workers <= 0:
+        print("Error: --max-workers debe ser mayor que 0")
+        sys.exit(1)
+
     print(f"Escaneando red: {args.red}  (timeout={args.timeout}s)")
 
-    dispositivos = escanear_red(
-        args.red,
-        timeout=args.timeout,
-        iface=args.iface,
-        resolve_names=not args.no_name,
-        name_timeout=args.name_timeout,
-        max_workers=args.max_workers
-    )
+    try:
+        dispositivos = escanear_red(
+            args.red,
+            timeout=args.timeout,
+            iface=args.iface,
+            resolve_names=not args.no_name,
+            name_timeout=args.name_timeout,
+            max_workers=args.max_workers
+        )
+    except PermissionError:
+        print("Error: se requieren permisos de superusuario para escanear la red")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error inesperado durante el escaneo: {e}")
+        sys.exit(1)
 
     imprimir_dispositivos(dispositivos)
 
     if args.save:
         guardar_csv(dispositivos, args.save)
+
+    if args.json_output:
+        guardar_json(dispositivos, args.json_output)
 
 
 if __name__ == "__main__":
