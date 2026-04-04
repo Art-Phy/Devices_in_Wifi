@@ -43,13 +43,13 @@ El proyecto está enfocado en demostrar habilidades en **programación de red co
 
 #### Opciones CLI
 ```
-`-r`, `--red`    -> Red/CIDR a escanear
-`-i`, `--iface`  -> Interfaz de red
-`-s`, `--save`   -> Guardar resultados en CSV
-`--json`         -> Guardar resultados en JSON
-`--no-name`      -> No resolver nombres de host
-`--max-workers`  -> Número de workers concurrentes
-`--name-timeout` -> Timeout para resolución DNS
+-r, --red      -> Red/CIDR a escanear
+-i, --iface    -> Interfaz de red
+-s, --save     -> Guardar resultados en CSV
+--json         -> Guardar resultados en JSON
+--no-name      -> No resolver nombres de host
+--max-workers  -> Número de workers concurrentes
+--name-timeout -> Timeout para resolución DNS
 ```
 
 #### 📊 Ejemplo de salida
