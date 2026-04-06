@@ -53,6 +53,41 @@ def obtener_nombre(ip: str, timeout: float = 1.0) -> str:
         return "Nombre desconocido"
 
 
+def detectar_tipo_dispositivo(nombre: str) -> str:
+    """
+    Intenta clasificar el tipo de dispositivo a partor del hostname.
+
+    Args:
+        nombre: hostname resuelto por DNS inversa.
+    
+    Returns:
+        Tipo de dispositivo estimado.
+    """
+    hostname = nombre.lower()
+
+    if hostname == "nombre desconocido":
+        return "Unknown"
+    
+    if any(x in hostname for x in ["router", "gateaway", "livebox", "movistar", "vodafone", "digi"]):
+        return "Router"
+    
+    if any(x in hostname for x in ["iphone", "android", "xiaomi", "redmi", "mobile", "telefon", "phone"]):
+        return "Smartphone"
+
+    if any(x in hostname for x in ["tv", "bravia", "smarttv", "lg"]):
+        return "Smart TV"
+
+    if any(x in hostname for x in ["printer", "epson", "brother", "hp", "canon"]):
+        return "Printer"
+
+    if any(x in hostname for x in ["pc", "desktop", "laptop", "macbook", "thinkpad", "acer"]):
+        return "Laptop/Desktop"
+    
+    if any (x in hostname for x in ["echo", "nest", "cam", "camera", "sensor", "plug"]):
+
+        return "Unknown"
+
+
 def _resolver_nombres_paralelo(ips: List[str], timeout: float = 1.0, max_workers: int = 20) -> Dict[str, str]:
     """
     Resuelve una lista de IPs a nombres en paralelo.
@@ -144,8 +179,16 @@ def escanear_red(red: str, timeout: float = 3.0, iface: Optional[str] = None,
     # Si no queremos resolver nombres, asignamos "Nombre desconocido"
     if not resolve_names:
         for ip in ips:
-            dispositivos.append({"ip": ip, "mac": ip_to_mac.get(ip, ""), "nombre": "Nombre desconocido"})
+            nombre = "Nombre desconocido"
+            tipo = detectar_tipo_dispositivo(nombre)
+            dispositivos.append({
+                "ip": ip,
+                "mac": ip_to_mac.get(ip, ""),
+                "nombre": nombre,
+                "tipo": tipo
+            })
         return dispositivos
+    
 
     # Resolución paralela de nombres
     start = time.time()
@@ -154,10 +197,14 @@ def escanear_red(red: str, timeout: float = 3.0, iface: Optional[str] = None,
 
     # Construir lista final
     for ip in ips:
+        nombre = ip_to_name.get(ip, "Nombre desonocido")
+        tipo = detectar_tipo_dispositivo(nombre)
+
         dispositivos.append({
             "ip": ip,
             "mac": ip_to_mac.get(ip, ""),
-            "nombre": ip_to_name.get(ip, "Nombre desconocido")
+            "nombre": nombre,
+            "tipo": tipo
         })
 
     # Información de rendimiento (opcional)
@@ -175,11 +222,10 @@ def imprimir_dispositivos(dispositivos: List[Dict[str, str]]) -> None:
         return
 
     print("\nDispositivos encontrados:")
-    print(f"{'IP':15} {'MAC':20} {'NOMBRE'}")
-    print("-" * 60)
+    print(f"{'IP':15} {'MAC':20} {'TIPO':18} {'NOMBRE'}")
+    print("-" * 90)
     for d in dispositivos:
-        print(f"{d['ip']:15} {d['mac']:20} {d['nombre']}")
-
+        print(f"{d['ip']:15} {d['mac']:20} {d['tipo']:18} {d['nombre']}")
 
 
 def guardar_csv(dispositivos: List[Dict[str, str]], ruta_salida: str) -> None:
