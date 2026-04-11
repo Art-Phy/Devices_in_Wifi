@@ -88,6 +88,47 @@ def detectar_tipo_dispositivo(nombre: str) -> str:
         return "Unknown"
 
 
+
+def detectar_tipo_fabricante(mac: str) -> str:
+    """
+    Intenta identificar el fabricante a partir del prefijo OUI de la MAC.
+
+    Args:
+        mac: dirección MAC del dispositivo.
+    
+    Returns:
+        Nombre estimado del fabricante
+    """
+    oui = mac.upper().replace("-", ":")[0:8]
+
+    fabricantes = {
+        "B8:27:EB": "Raspberry Pi Foundation",
+        "DC:A6:32": "Raspberry Pi Foundation",
+        "E4:5F:01": "Raspberry Pi Foundation",
+        "FC:FB:FB": "Apple",
+        "F0:18:98": "Apple",
+        "3C:52:82": "Apple",
+        "28:CF:E9": "Apple",
+        "48:8F:5A": "Huawei",
+        "F4:F2:6D": "Samsung",
+        "90:9F:33": "LG",
+        "00:1A:79": "Cisco",
+        "00:1B:63": "Apple",
+        "00:1E:C2": "ASUSTek",
+        "00:09:5B": "Netgear",
+        "A4:2B:B0": "TP-Link",
+        "FC:EC:DA": "Ubiquiti",
+        "C0:56:27": "Belkin",
+        "18:B4:30": "Nest",
+        "44:65:0D": "Amazon",
+        "00:17:88": "Philips",
+        "EC:FA:BC": "Xiaomi"
+    }
+
+    return fabricantes.get(oui, "Desconocido")
+
+
+
 def _resolver_nombres_paralelo(ips: List[str], timeout: float = 1.0, max_workers: int = 20) -> Dict[str, str]:
     """
     Resuelve una lista de IPs a nombres en paralelo.
@@ -179,13 +220,17 @@ def escanear_red(red: str, timeout: float = 3.0, iface: Optional[str] = None,
     # Si no queremos resolver nombres, asignamos "Nombre desconocido"
     if not resolve_names:
         for ip in ips:
+            mac = ip_to_mac.get(ip, "")
             nombre = "Nombre desconocido"
             tipo = detectar_tipo_dispositivo(nombre)
+            fabricante = detectar_tipo_fabricante(mac)
+
             dispositivos.append({
                 "ip": ip,
                 "mac": ip_to_mac.get(ip, ""),
                 "nombre": nombre,
-                "tipo": tipo
+                "tipo": tipo,
+                "fabricante": fabricante
             })
         return dispositivos
     
@@ -197,14 +242,17 @@ def escanear_red(red: str, timeout: float = 3.0, iface: Optional[str] = None,
 
     # Construir lista final
     for ip in ips:
+        mac = ip_to_mac.get(ip, "")
         nombre = ip_to_name.get(ip, "Nombre desonocido")
         tipo = detectar_tipo_dispositivo(nombre)
+        fabricante = detectar_tipo_fabricante(mac)
 
         dispositivos.append({
             "ip": ip,
             "mac": ip_to_mac.get(ip, ""),
             "nombre": nombre,
-            "tipo": tipo
+            "tipo": tipo,
+            "fabricante": fabricante
         })
 
     # Información de rendimiento (opcional)
@@ -222,10 +270,10 @@ def imprimir_dispositivos(dispositivos: List[Dict[str, str]]) -> None:
         return
 
     print("\nDispositivos encontrados:")
-    print(f"{'IP':15} {'MAC':20} {'TIPO':18} {'NOMBRE'}")
-    print("-" * 90)
+    print(f"{'IP':15} {'MAC':20} {'TIPO':18} {'FABRICANTE':20} {'NOMBRE'}")
+    print("-" * 120)
     for d in dispositivos:
-        print(f"{d['ip']:15} {d['mac']:20} {d['tipo']:18} {d['nombre']}")
+        print(f"{d['ip']:15} {d['mac']:20} {d['tipo']:18} {d['fabricante']:20} {d['nombre']}")
 
 
 def guardar_csv(dispositivos: List[Dict[str, str]], ruta_salida: str) -> None:
