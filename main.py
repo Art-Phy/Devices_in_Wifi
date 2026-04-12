@@ -339,7 +339,7 @@ def guardar_csv(dispositivos: List[Dict[str, str]], ruta_salida: str) -> None:
     salida = Path(ruta_salida)
     salida.parent.mkdir(parents=True, exist_ok=True)
     with salida.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=["ip", "mac", "tipo", "nombre"])
+        writer = csv.DictWriter(f, fieldnames=["ip", "mac", "tipo", "fabricante", "nombre"])
         writer.writeheader()
         for d in dispositivos:
             writer.writerow(d)
