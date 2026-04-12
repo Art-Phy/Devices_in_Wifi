@@ -18,14 +18,12 @@ from __future__ import annotations
 import ipaddress
 import sys
 import socket
-import csv
 import argparse
-from pathlib import Path
+from exporter import guardar_csv, guardar_json
 from typing import List, Dict, Optional
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 import ipaddress
-import json
 
 # scapy import
 from scapy.all import ARP, Ether, srp, conf  # type: ignore
@@ -330,33 +328,6 @@ def imprimir_dispositivos(dispositivos: List[Dict[str, str]]) -> None:
     print("-" * 120)
     for d in dispositivos:
         print(f"{d['ip']:15} {d['mac']:20} {d['tipo']:18} {d['fabricante']:20} {d['nombre']}")
-
-
-def guardar_csv(dispositivos: List[Dict[str, str]], ruta_salida: str) -> None:
-    """
-    Guarda la lista de dispositivos en un archivo CSV (encabezados: ip, mac, nombre).
-    """
-    salida = Path(ruta_salida)
-    salida.parent.mkdir(parents=True, exist_ok=True)
-    with salida.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=["ip", "mac", "tipo", "fabricante", "nombre"])
-        writer.writeheader()
-        for d in dispositivos:
-            writer.writerow(d)
-    print(f"Resultados guardados en: {salida}")
-
-
-def guardar_json(dispositivos: List[Dict[str, str]], ruta_salida: str) -> None:
-    """
-    Guardar la lista de dispositivos en un archivo JSON.
-    """
-    salida = Path(ruta_salida)
-    salida.parent.mkdir(parents=True, exist_ok=True)
-
-    with salida.open("w", encoding="utf-8") as f:
-        json.dump(dispositivos, f, indent=2, ensure_ascii=False)
-
-    print(f"Resultados guardados en JSON: {salida}")
 
 
 def parse_args() -> argparse.Namespace:
