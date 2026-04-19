@@ -23,21 +23,48 @@ El proyecto está enfocado en demostrar habilidades en **programación de red co
 - Obtención de dirección **IP** y **MAC**.
 - Resolución opcional de **hostname** mediante reverse DNS.
 
+---
+
+#### 🧠 Enriquecimiento de datos
+
+- Detección heurística del **tipo de dispositivo**:
+  - Router
+  - Smartphone
+  - Smart TV
+  - IoT Device
+  - etc.
+
+- Identificación del **fabricante** a partir de la MAC (OUI).
+- Generación de **nombres amigables** cuando no hay DNS disponible:
+  - `TP-Link Router`
+  - `Apple Smartphone`
+  - `Philips IoT Device`
+
+---
+
 #### CLI Features
 
 - Detección automática de la red local si no se especifica `-r`.
 - Selección manual del rango de red.
 - Selección de interfaz de red.
-- Control del número de workers concurrentes.
-- Desactivación opcional de resolución de nombres.
-- Timeout configurable para resolución DNS.
+- Control de concurrencia (`--max-workers`).
+- Timeout configurable (`--name-timeout`).
+- Desactivación de resolución DNS (`--no-name`).
 - Validación de argumentos de entrada.
+- Manejo de errores claro y controlado.
 
-#### Export
+---
 
-- Exportación de resultados a **CSV**.
-- Exportación de resultados a **JSON**.
-- Salida clara y legible en consola.
+#### 💾 Export
+
+- Exportación a **CSV**
+- Exportación a **JSON**
+- Datos exportados incluyen:
+  - IP
+  - MAC
+  - Tipo
+  - Fabricante
+  - Nombre
 
 ---
 
@@ -84,41 +111,45 @@ y de los parámetros `--max-workers` y `--name-timeout`.
 git clone https://github.com/Art-Phy/Devices_in_Wifi.git
 cd Devices_in_Wifi
 ```
+---
 
 #### 🧠 Decisiones técnicas destacables
 - Uso de Scapy para escaneos ARP a bajo nivel. 
 - Resolución de nombres mediante reverse **DNS lookup**.
 - Uso de **ThreadPoolExecutor** para paralelizar consultas DNS.
 - Validación de entrada con **ipaddress**
+- Uso de OUI para identificación de fabricante.
 - Manejo de errores para mejorar la experiencia CLI.
 - Diseño simple y autocontenido orientado a herramientas reales.
 - Arquitectura modular preparada para futuras mejoras.
 - Versionado semántico con releases claras.
 - Flujo GitFlow (`main`, `develop`, `feature/*`).
 
+---
+
 #### 🔭 Posibles extensiones futuras (no implementadas)
-- Detección de fabricante mediante OUI lookup.
-- Identificación de tipo de dispositivo.
 - Interfaz web ligera para visualizar dispositivos detectados.
 - Monitorización continua de la red.
 - Alertas cuando aparece un nuevo dispositivo.
+- Identificación más precisa por fingerprinting.
+- Base de datos OUI completa y externa.
+- Test automatizados con pytest.
 
 ---
 
 ### 📁 Project Structure
 ```
-- Devices_in_Wifi
+Devices_in_Wifi
 │
-├── - main.py # CLI entrypoint del escáner
-├── - README.md # Documentación del proyecto
-├── - CHANGELOG.md # Historial de cambios y versiones
-├── - requirements.txt # Dependencias del proyecto
-├── - LICENSE
-└── - .gitignore
+├── main.py         # Punto de entrada CLI
+├── scanner.py      # Escaneo de red y resolución DNS
+├── detection.py    # Clasificación de dispositivos
+├── exporter.py     # Exportación de datos
+├── README.md
+├── CHANGELOG.md
+├── requirements.txt
+└── .gitignore
 ```
-
-El proyecto está diseñado como una **herramienta CLI simple y autocontenida**, donde `main.py` contiene la lógica principal del escaneo de red, resolución de nombres y exportación de resultados.
-
 ---
 
 > [!TIP]
