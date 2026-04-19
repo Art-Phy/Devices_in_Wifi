@@ -5,6 +5,32 @@ The format is inspired by **Keep a Changelog** and the project follows **Semanti
 
 ---
 
+### [1.4.0] - 19.04.2026
+
+#### Added
+
+- Heuristic device type detection based on resolved hostname.
+- MAC vendor detection using OUI prefixes.
+- Friendly fallback device naming when reverse DNS is not available.
+- Automatic local network detection when no CIDR range is provided.
+- JSON export support for detected devices.
+
+#### Changed
+
+- Improved CLI argument validation for network range and numeric parameters.
+- Improved scan-time error handling with clearer user-facing messages.
+- Refactored the project into dedicated modules:
+  - `scanner.py` for network scanning and DNS resolution
+  - `detection.py` for classification heuristics
+  - `exporter.py` for CSV and JSON export
+
+#### Fixed
+
+- Improved output consistency by including detected device type and vendor in exported results.
+- Improved usability when hostnames are not available in the local network.
+
+---
+
 ### [1.3.0] - 04.04.2026
 
 #### Added
