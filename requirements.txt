@@ -6,3 +6,6 @@
 
 # Network packet manipulation and ARP scanning
 scapy==2.7.0
+
+# Testing
+pytest
