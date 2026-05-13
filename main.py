@@ -16,11 +16,15 @@ IMPORTANTE:
 
 from __future__ import annotations
 import ipaddress
-import sys
 import argparse
-from exporter import guardar_csv, guardar_json
-from scanner import detectar_red_local, escanear_red, imprimir_dispositivos
 import ipaddress
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).parent / "src"))
+
+from src.devices_in_wifi.exporter import guardar_csv, guardar_json
+from src.devices_in_wifi.scanner import detectar_red_local, escanear_red, imprimir_dispositivos
 
 
 
