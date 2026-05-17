@@ -1,5 +1,5 @@
 
-from src.devices_in_wifi.scanner import detectar_red_local, imprimir_dispositivos, escanear_red
+from devices_in_wifi.scanner import detectar_red_local, imprimir_dispositivos, escanear_red
 
 
 
@@ -42,7 +42,7 @@ def test_detectar_red_local_fallback(monkeypatch) -> None:
             return False
         
     monkeypatch.setattr(
-        "src.devices_in_wifi.scanner.socket.socket",
+        "devices_in_wifi.scanner.socket.socket",
         lambda *args, **kwargs: FakeSocket(),
     )
 
@@ -62,7 +62,7 @@ def test_escanear_red_sin_dns(monkeypatch) -> None:
     ]
 
     monkeypatch.setattr(
-        "src.devices_in_wifi.scanner.srp",
+        "devices_in_wifi.scanner.srp",
         lambda *args, **kwargs: (fake_answered, None),
     )
 
