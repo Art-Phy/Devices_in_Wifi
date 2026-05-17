@@ -5,6 +5,37 @@ The format is inspired by **Keep a Changelog** and the project follows **Semanti
 
 ---
 
+### [1.5.0] - 17.05.2026
+
+#### Added
+
+- Automated test suite with **pytest**.
+- Unit tests for device classification heuristics.
+- Unit tests for MAC vendor detection logic.
+- Unit tests for fallback naming behavior.
+- Unit tests for CSV export.
+- Unit tests for JSON export.
+- Unit tests for scanner output formatting.
+- Mocked tests for network scanning behavior.
+- CLI argument parsing tests.
+- `tests/conftest.py` to support clean package imports.
+
+#### Changed
+
+- Refactored project structure to follow the **src layout** pattern:
+  - `src/devices_in_wifi/`
+  - `tests/`
+- Cleaned package imports across the project.
+- Improved project maintainability through clearer package organization.
+- Updated README documentation with testing, architecture and current feature set.
+
+#### Fixed
+
+- Resolved import path inconsistencies between runtime execution and test environment.
+- Improved project portability and package consistency.
+
+---
+
 ### [1.4.0] - 19.04.2026
 
 #### Added
