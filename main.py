@@ -1,21 +1,16 @@
 
 # -*- coding: utf-8 -*-
+
 """
 =============================
-     DEVICES IN WIFI (v1.1.0)
+     DEVICES IN WIFI
 =============================
 
-Escaneador de dispositivos en una red Wi-Fi (basado en ARP) con resolución
-de nombres DNS inversa en paralelo usando ThreadPoolExecutor.
-
-Autor: Art-Phy (mejorado)
-IMPORTANTE:
-  - Requiere permisos de superusuario (sudo) para enviar/recibir paquetes raw.
-  - Usa scapy (pip install scapy). En macOS/Ubuntu puede requerir libpcap.
+Escaneador de dispositivos en una red Wi-Fi basado en ARP.
 """
 
 from __future__ import annotations
-import ipaddress
+
 import argparse
 import ipaddress
 import sys
@@ -23,8 +18,8 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent / "src"))
 
-from src.devices_in_wifi.exporter import guardar_csv, guardar_json
-from src.devices_in_wifi.scanner import detectar_red_local, escanear_red, imprimir_dispositivos
+from devices_in_wifi.exporter import guardar_csv, guardar_json
+from devices_in_wifi.scanner import detectar_red_local, escanear_red, imprimir_dispositivos
 
 
 

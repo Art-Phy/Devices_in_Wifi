@@ -9,7 +9,7 @@ from typing import Dict, List, Optional
 
 from scapy.all import ARP, Ether, conf, srp # type: ignore
 
-from src.devices_in_wifi.detection import (
+from devices_in_wifi.detection import (
     construir_nombre,
     detectar_fabricante,
     detectar_tipo_dispositivo,
