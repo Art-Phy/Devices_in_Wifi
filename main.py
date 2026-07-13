@@ -36,6 +36,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-name", dest="no_name", action="store_true", help="No intentar resolver nombres por DNS inversa (más rápido)")
     parser.add_argument("--name-timeout", type=float, default=1.0, help="Timeout para cada gethostbyaddr (default: %(default)s)")
     parser.add_argument("--max-workers", type=int, default=20, help="Máx. hilos para resolución de nombres (default: %(default)s)")
+    parser.add_argument("--watch", action="store_true", help="Monitor the network continuouslz")
+    parser.add_argument("--interval", type=int, default=30, help="Seconds between scans in watch mode (default: %(default)s)")
     return parser.parse_args()
 
 
@@ -81,6 +83,10 @@ def main() -> None:
         sys.exit(1)
 
     imprimir_dispositivos(dispositivos)
+
+    if args.interval <= 0:
+        print("Error: --interval deber ser mayor que 0")
+        sys.exit(1)
 
     if args.save:
         guardar_csv(dispositivos, args.save)
