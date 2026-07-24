@@ -27,17 +27,72 @@ def parse_args() -> argparse.Namespace:
     """
     Analiza los argumentos de la línea de comandos.
     """
-    parser = argparse.ArgumentParser(description="Escaneador de dispositivos en red Wi-Fi (ARP scan)")
-    parser.add_argument("-r", "--red", default=None, help="Red/CIDR a escanear (ej: 192.168.1.0/24)")
-    parser.add_argument("-t", "--timeout", type=float, default=3.0, help="Timeout ARP en segundos (default: %(default)s)")
-    parser.add_argument("-i", "--iface", default=None, help="Interfaz a usar (opcional)")
-    parser.add_argument("-s", "--save", default=None, help="Ruta CSV donde guardar resultados (opcional)")
-    parser.add_argument("--json", dest="json_output", default=None, help="Ruta JSON donde guardar resultados (opcional)")
-    parser.add_argument("--no-name", dest="no_name", action="store_true", help="No intentar resolver nombres por DNS inversa (más rápido)")
-    parser.add_argument("--name-timeout", type=float, default=1.0, help="Timeout para cada gethostbyaddr (default: %(default)s)")
-    parser.add_argument("--max-workers", type=int, default=20, help="Máx. hilos para resolución de nombres (default: %(default)s)")
-    parser.add_argument("--watch", action="store_true", help="Monitor the network continuouslz")
-    parser.add_argument("--interval", type=int, default=30, help="Seconds between scans in watch mode (default: %(default)s)")
+    
+    parser = argparse.ArgumentParser(
+        description="Escaneador de dispositivos en red Wi-Fi (ARP scan)"
+    )
+
+    parser.add_argument(
+        "-r",
+        "--red",
+        default=None,
+        help="Red/CIDR a escanear (ej: 192.168.1.0/24)",
+    )
+    parser.add_argument(
+        "-t",
+        "--timeout",
+        type=float,
+        default=3.0,
+        help="Timeout ARP en segundos (default: %(default)s)",
+    )
+    parser.add_argument(
+        "-i",
+        "--iface",
+        default=None,
+        help="Interfaz a usar (opcional)",
+    )
+    parser.add_argument(
+        "-s",
+        "--save",
+        default=None,
+        help="Ruta CSV donde guardar resultados (opcional)",
+    )
+    parser.add_argument(
+        "--json",
+        dest="json_output",
+        default=None,
+        help="Ruta JSON donde guardar resultados (opcional)",
+    )
+    parser.add_argument(
+        "--no-name",
+        dest="no_name",
+        action="store_true",
+        help="No intentar resolver nombres por DNS inversa (más rápido)",
+    )
+    parser.add_argument(
+        "--name-timeout",
+        type=float,
+        default=1.0,
+        help="Timeout para cada gethostbyaddr (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--max-workers",
+        type=int,
+        default=20,
+        help="Máx. hilos para resolución de nombres (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--watch",
+        action="store_true",
+        help="Monitorizar la red de forma continua",
+    )
+    parser.add_argument(
+        "--interval",
+        type=int,
+        default=30,
+        help="Segundos entre escaneos en modo watch (default: %(default)s)",
+    )
+
     return parser.parse_args()
 
 
