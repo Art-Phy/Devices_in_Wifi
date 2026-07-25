@@ -1,7 +1,8 @@
 
 import sys
+import pytest
 
-from main import parse_args
+from main import parse_args, comprobar_permisos_escaneo
 
 
 
@@ -45,3 +46,18 @@ def test_parse_args_custom_values(monkeypatch) -> None:
     assert args.timeout == 5.0
     assert args.max_workers == 10
     assert args.no_name is True
+
+
+
+def test_comprobar_permisos_escaneo_sin_privilegios(monkeypatch, capsys) -> None:
+
+    monkeypatch.setattr("main.os.geteuid", lambda: 501)
+
+    with pytest.raises(SystemExit) as error:
+        comprobar_permisos_escaneo()
+
+    salida = capsys.readouterr()
+
+    assert error.value.code == 1
+    assert "requiere permisos de administrador" in salida.out
+    assert "sudo .venv/bin/python main.py" in salida.out
