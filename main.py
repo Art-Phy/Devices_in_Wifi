@@ -20,6 +20,7 @@ sys.path.append(str(Path(__file__).parent / "src"))
 
 from devices_in_wifi.exporter import guardar_csv, guardar_json
 from devices_in_wifi.scanner import detectar_red_local, escanear_red, imprimir_dispositivos
+from devices_in_wifi.monitor import monitorizar_red
 
 
 
@@ -121,8 +122,11 @@ def main() -> None:
 
     print(f"Escaneando red: {args.red}  (timeout={args.timeout}s)")
 
-    try:
-        dispositivos = escanear_red(
+
+
+
+    def ejecutar_escaneo():
+        return escanear_red(
             args.red,
             timeout=args.timeout,
             iface=args.iface,
@@ -130,6 +134,18 @@ def main() -> None:
             name_timeout=args.name_timeout,
             max_workers=args.max_workers
         )
+
+    try:
+        if args.watch:
+            monitorizar_red(
+                scan_function=ejecutar_escaneo,
+                display_function=imprimir_dispositivos,
+                interval=args.interval,
+            )
+            return
+
+        dispositivos = ejecutar_escaneo()
+    
     except PermissionError:
         print("Error: se requieren permisos de superusuario para escanear la red")
         sys.exit(1)
@@ -138,10 +154,6 @@ def main() -> None:
         sys.exit(1)
 
     imprimir_dispositivos(dispositivos)
-
-    if args.interval <= 0:
-        print("Error: --interval deber ser mayor que 0")
-        sys.exit(1)
 
     if args.save:
         guardar_csv(dispositivos, args.save)
