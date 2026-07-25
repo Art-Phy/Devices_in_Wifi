@@ -11,6 +11,7 @@ Escaneador de dispositivos en una red Wi-Fi basado en ARP.
 
 from __future__ import annotations
 
+import os
 import argparse
 import ipaddress
 import sys
@@ -97,6 +98,22 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+
+def comprobar_permisos_escaneo() -> None:
+    """
+    Comprueba que el proceso tenga permisos para realizar escaneos ARP.
+
+    En sistemas Unix, Scapy necesita privilegios de administrador para trabajar con sockets raw.
+    """
+    if hasattr(os, "geteuid") and os.geteuid() != 0:
+        print("Error: el escaneo ARP requiere permisos de administrador")
+        print()
+        print("Ejecuta de nuevo el comando con sudo:")
+        print("sudo .venv/bin/python main.py")
+        sys.exit(1)
+    
+
+
 def main() -> None:
     args = parse_args()
     if args.red is None:
@@ -120,9 +137,9 @@ def main() -> None:
         print("Error: --max-workers debe ser mayor que 0")
         sys.exit(1)
 
+    comprobar_permisos_escaneo()
+
     print(f"Escaneando red: {args.red}  (timeout={args.timeout}s)")
-
-
 
 
     def ejecutar_escaneo():
