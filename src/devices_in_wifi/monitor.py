@@ -19,7 +19,7 @@ def monitorizar_red(scan_function: ScanFunction, display_function: DisplayFuncti
         interval: segundos de espera entre escaneos.
     """
     print(
-        f"Monitorizando la red cada {interval} sengundos. "
+        f"Monitorizando la red cada {interval} segundos. "
         "Pulsa Ctrl+C para detener."
     )
 
