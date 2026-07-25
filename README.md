@@ -4,7 +4,7 @@
   <img src="https://img.shields.io/badge/python-3.10+-blue.svg" />
   <img src="https://img.shields.io/badge/CLI-Network%20Scanner-orange" />
   <img src="https://img.shields.io/badge/Scapy-Network%20Tools-red" />
-  <img src="https://img.shields.io/badge/Tests-21%20Passing-success" />
+  <img src="https://img.shields.io/badge/Testing-pytest-green" />
   <img src="https://img.shields.io/badge/Status-v1.6.0%20Stable-success" />
   <img src="https://img.shields.io/badge/License-MIT-lightgrey" />
 </p>
@@ -316,5 +316,5 @@ Devices_in_Wifi/
 
 ---
 
-> [!TIP]
-> Si el proyecto te resulta útil, una ⭐ en GitHub siempre alegra más que encontrar un dispositivo desconocido conectado a la red.
+>##### [!TIP]
+>##### Si el proyecto te resulta útil, una ⭐ en GitHub siempre alegra más que encontrar un dispositivo desconocido conectado a la red.
