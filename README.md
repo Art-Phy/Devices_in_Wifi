@@ -316,5 +316,5 @@ Devices_in_Wifi/
 
 ---
 
->#####[!TIP]
+>[!TIP]
 >##### Si el proyecto te resulta útil, una ⭐ en GitHub siempre alegra más que encontrar un dispositivo desconocido conectado a la red.
