@@ -5,6 +5,36 @@ The format is inspired by **Keep a Changelog** and the project follows **Semanti
 
 ---
 
+### [1.6.0] - 25.07.2026
+
+#### Added
+
+- Continuous network monitoring through the new `--watch` CLI option.
+- Configurable delay between scans using `--interval`.
+- New `monitor.py` module dedicated to continuous monitoring logic.
+- Graceful monitoring shutdown using `Ctrl+C`.
+- Administrator permission check before starting an ARP scan.
+- Friendly instructions showing how to rerun the command with `sudo`.
+- Automated tests for continuous monitoring behavior.
+- Automated test for administrator permission validation.
+
+#### Changed
+
+- Refactored CLI argument definitions for improved readability and maintainability.
+- Improved help messages for monitoring-related arguments.
+- Centralized scan execution so normal and watch modes reuse the same logic.
+- Improved monitoring output with information about the next scheduled scan.
+- Updated project documentation with continuous monitoring usage and examples.
+- Updated the testing badge to reflect 21 passing tests.
+
+#### Fixed
+
+- Validation now rejects monitoring intervals equal to or lower than zero.
+- Improved behavior when the application is executed without the privileges required by Scapy.
+- Corrected monitoring output messages and related test expectations.
+
+---
+
 ### [1.5.0] - 17.05.2026
 
 #### Added
